@@ -2,13 +2,10 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
+#include <time.h>
 
 #include "Scheduler.h"
 #include "Queue.h"
-
-#define NUM_PRIORITIES 3
-#define MAX_TASKS 8
-#define MAX_SIZE_OF_TASK 20
 
 Scheduler* scheduler_init() {
 	Scheduler* scheduler = calloc(1, sizeof(Scheduler));
@@ -21,6 +18,12 @@ Scheduler* scheduler_init() {
 	return scheduler;
 }
 
+void scheduler_free(Scheduler* scheduler) {
+	assert(scheduler);
+	for (size_t i = 0; i < NUM_PRIORITIES; i++)
+		queue_free(scheduler->queues[i]);
+}
+
 void enqueue_task(Scheduler* scheduler, const Task* task) {
 	assert(scheduler);
 	assert(task);
@@ -30,7 +33,7 @@ void enqueue_task(Scheduler* scheduler, const Task* task) {
 		return;
 	}
 
-	if (task->size > MAX_SIZE_OF_TASK) {
+	if (task->size * task->typeTask->timeToByte > MAX_SIZE_OF_TASK) {
 		printf("This is too big a task!!!");
 		return;
 	}
@@ -45,6 +48,23 @@ void print_scheduler(const Scheduler* scheduler) {
 	printf("\n********Scheduler********\n");
 	for (size_t i = 0; i < NUM_PRIORITIES; i++) {
 		printf("\nQueue %d: \n", (int)i);
-		print_queue(scheduler->queues[i]);
+		print_queue(scheduler->queues[i],print_task);
+	}
+}
+
+void timer_task(int time) {
+	clock_t msec = clock();
+	while (clock() - msec < time);
+}
+
+void dequeue_task(Scheduler* scheduler, int num_queue) {
+	Task* task = queue_dequeue(scheduler->queues[num_queue]);
+	double time_task = task->size * task->typeTask->timeToByte;
+	if (time_task <= 10)
+		timer_task(time_task);
+	else {
+		timer_task(10);
+		task->size -= (10 / task->typeTask->timeToByte);
+		queue_enqueue(scheduler->queues[num_queue], task);
 	}
 }

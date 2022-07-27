@@ -1,5 +1,4 @@
 #include "queue.h"
-#include "Task.h"
 
 #include <assert.h>
 #include <stddef.h>
@@ -87,6 +86,6 @@ size_t queue_size(const Queue* queue) {
     return queue->size;
 }
 
-void print_queue(const Queue* queue) {
-    queue_iterate(queue, print_task);
+void print_queue(const Queue* queue, void (*fn)(void*)) {
+    queue_iterate(queue, fn);
 }

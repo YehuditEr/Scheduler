@@ -72,6 +72,6 @@ bool   queue_is_empty(const Queue * queue);
 void   queue_iterate(const Queue * queue, void (*fn)(void*));
 size_t queue_size(const Queue * queue);
 
-void print_queue(const Queue* queue);
+void print_queue(const Queue* queue, void (*fn)(void*));
 
 #endif

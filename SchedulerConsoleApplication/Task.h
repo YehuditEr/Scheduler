@@ -12,5 +12,8 @@ typedef struct Task Task;
 
 Task* task_init();
 
+void task_free(Task* task);
+
 void print_task(const Task* task);
 
+Task* create_random_task();
