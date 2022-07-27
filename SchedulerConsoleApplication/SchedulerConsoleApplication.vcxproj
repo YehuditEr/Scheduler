@@ -127,7 +127,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Queue.c" />
+    <ClCompile Include="Scheduler.c" />
     <ClCompile Include="SchedulerConsoleApplication.c" />
+    <ClCompile Include="Task.c" />
+    <ClCompile Include="TypeTask.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Queue.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Scheduler.h" />
+    <ClInclude Include="Task.h" />
+    <ClInclude Include="TypeTask.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SchedulerConsoleApplication.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
