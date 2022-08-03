@@ -2,17 +2,23 @@
 
 #include "Queue.h"
 #include "Task.h"
+#include "DefinationsOfSize.h"
 
-#define NUM_PRIORITIES 3
-#define MAX_TASKS 8
-#define MAX_SIZE_OF_TASK 20
+#include <stdbool.h>
+
+struct Scheduling {
+	int current_queue;
+	int sum_current_queue;
+};
 
 struct Scheduler
 {
 	Queue** queues;
 	int num_tasks;
-
+	struct Scheduling* scheduling;
 };
+
+static int time_to_queue[NUM_PRIORITIES] = { TIME_QUEUE1 ,TIME_QUEUE2, TIME_QUEUE3 };
 
 typedef struct Scheduler Scheduler;
 
@@ -22,9 +28,10 @@ void scheduler_free(Scheduler* scheduler);
 
 void enqueue_task(Scheduler* scheduler, const Task* task);
 
-//Task* dequeue_task(Scheduler* scheduler);
-
 void print_scheduler(const Scheduler* scheduler);
 
-void timer_task(int time);
+double schedulerTasks(Scheduler* scheduler);
 
+bool isFull(Scheduler* scheduer);
+
+void pushTaskToPush(Scheduler* scheduler);

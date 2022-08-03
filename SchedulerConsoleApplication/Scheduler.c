@@ -11,6 +11,10 @@ Scheduler* scheduler_init() {
 	Scheduler* scheduler = calloc(1, sizeof(Scheduler));
 	assert(scheduler);
 	scheduler->queues = calloc(NUM_PRIORITIES, sizeof(Queue*));
+	scheduler->scheduling = calloc(1, sizeof(struct Scheduling*));
+	assert(scheduler->scheduling);
+	scheduler->scheduling->current_queue = 1;
+	scheduler->scheduling->sum_current_queue = 0;
 	assert(scheduler->queues);
 	scheduler->num_tasks = 0;
 	for (size_t i = 0; i < NUM_PRIORITIES; i++)
@@ -25,6 +29,8 @@ void scheduler_free(Scheduler* scheduler) {
 }
 
 void enqueue_task(Scheduler* scheduler, const Task* task) {
+	//printf("\n----enqueue_task:\n");
+	//print_task(task);
 	assert(scheduler);
 	assert(task);
 	//assert(scheduler->num_tasks < MAX_TASKS);
@@ -43,6 +49,42 @@ void enqueue_task(Scheduler* scheduler, const Task* task) {
 	scheduler->num_tasks++;
 }
 
+Task* task_to_push = NULL;
+
+double dequeue_task(Scheduler* scheduler, int num_queue, double max_time) {
+
+	assert(max_time <= 10);
+
+	Task* task = queue_dequeue(scheduler->queues[num_queue]);
+	if (task == NULL)
+		printf("\n\tNOT SCHEDULING TASK....\n");
+	else
+		printf("Task scheduler: %d", task->Id);
+	/*printf("\n----dequeue_task\n");
+	print_task(task);*/
+
+	if (task == NULL)
+		return 0;
+	double time_task = task->size * task->typeTask->timeToByte;
+	if (time_task <= max_time) {
+		return time_task;
+		scheduler->num_tasks--;
+	}
+	else {
+		task->size -= (max_time / task->typeTask->timeToByte);
+		task_to_push = task;
+		//queue_enqueue(scheduler->queues[num_queue], task);
+		return max_time;
+	}
+
+}
+
+void pushTaskToPush(Scheduler* scheduler) {
+	if (task_to_push != NULL)
+		queue_enqueue(scheduler->queues[task_to_push->typeTask->priority - 1], task_to_push);
+	task_to_push = NULL;
+}
+
 void print_scheduler(const Scheduler* scheduler) {
 	assert(scheduler);
 	printf("\n********Scheduler********\n");
@@ -52,19 +94,41 @@ void print_scheduler(const Scheduler* scheduler) {
 	}
 }
 
-void timer_task(int time) {
-	clock_t msec = clock();
-	while (clock() - msec < time);
+double schedulerTasks(Scheduler* scheduler) {
+
+	/*printf("\n----schedulerTasks\n");
+	print_scheduler(scheduler);*/
+
+	if (queue_is_empty(scheduler->queues[scheduler->scheduling->current_queue - 1])) {
+		scheduler->scheduling->current_queue = (scheduler->scheduling->current_queue % 3) + 1;
+		if (queue_is_empty(scheduler->queues[scheduler->scheduling->current_queue - 1])) {
+			scheduler->scheduling->current_queue = (scheduler->scheduling->current_queue % 3) + 1;
+			if (queue_is_empty(scheduler->queues[scheduler->scheduling->current_queue - 1])) {
+				scheduler->scheduling->current_queue = (scheduler->scheduling->current_queue % 3) + 1;
+				return;
+			}
+
+		}
+	}
+	printf("\n\tuse queue: %d\n", scheduler->scheduling->current_queue);
+
+	if (scheduler->scheduling->sum_current_queue >= time_to_queue[scheduler->scheduling->current_queue - 1]) {
+		scheduler->scheduling->sum_current_queue = 0;
+		scheduler->scheduling->current_queue = (scheduler->scheduling->current_queue % 3) + 1;
+	}
+
+	int remaining_time_to_queue = time_to_queue[scheduler->scheduling->current_queue - 1] - scheduler->scheduling->sum_current_queue;
+	int time_to_task = 0;
+	if (remaining_time_to_queue > 10)
+		time_to_task = dequeue_task(scheduler, scheduler->scheduling->current_queue - 1, 10);
+	else
+		time_to_task = dequeue_task(scheduler, scheduler->scheduling->current_queue - 1, remaining_time_to_queue);
+
+	scheduler->scheduling->sum_current_queue += time_to_task;
+
+	return time_to_task;
 }
 
-void dequeue_task(Scheduler* scheduler, int num_queue) {
-	Task* task = queue_dequeue(scheduler->queues[num_queue]);
-	double time_task = task->size * task->typeTask->timeToByte;
-	if (time_task <= 10)
-		timer_task(time_task);
-	else {
-		timer_task(10);
-		task->size -= (10 / task->typeTask->timeToByte);
-		queue_enqueue(scheduler->queues[num_queue], task);
-	}
+bool isFull(Scheduler* scheduer) {
+	return scheduer->num_tasks == MAX_TASKS;
 }
