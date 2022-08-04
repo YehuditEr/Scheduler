@@ -40,8 +40,6 @@ void queue_enqueue(Queue* queue, void* item) {
     assert(queue);
     assert(item);
     queue->data[queue->tail] = item;
-    queue->size++;
-
     // Resize the underlying array if we've reached capacity.
     if (queue->size == queue->capacity) {
         printf("The queue full!!!");
@@ -61,9 +59,11 @@ void queue_enqueue(Queue* queue, void* item) {
     }
 
     queue->tail = (queue->tail + 1) % queue->capacity;
+    queue->size++;
+
 }
 
-bool queue_is_empty(const Queue* queue) {
+bool isEmptyQueue(const Queue* queue) {
     assert(queue);
     return queue->size == 0;
 }

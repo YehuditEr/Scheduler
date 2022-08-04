@@ -6,32 +6,38 @@
 
 #include <stdbool.h>
 
+/// <summary>
+/// Saves the timing state between queues
+/// </summary>
 struct Scheduling {
-	int current_queue;
-	int sum_current_queue;
+	int currentQueue;
+	int timeInCurrentQueue;
+	Task* taskInCPU;
 };
+
+typedef struct Scheduling Scheduling;
 
 struct Scheduler
 {
 	Queue** queues;
-	int num_tasks;
+	int numTasks;
 	struct Scheduling* scheduling;
 };
 
-static int time_to_queue[NUM_PRIORITIES] = { TIME_QUEUE1 ,TIME_QUEUE2, TIME_QUEUE3 };
-
 typedef struct Scheduler Scheduler;
 
-Scheduler* scheduler_init();
+static int time_to_queue[NUM_PRIORITIES] = { QUANTUM_QUEUE1 ,QUANTUM_QUEUE2, QUANTUM_QUEUE3 };
 
-void scheduler_free(Scheduler* scheduler);
+Scheduler* initScheduler();
 
-void enqueue_task(Scheduler* scheduler, const Task* task);
+void freeScheduler(Scheduler* scheduler);
 
-void print_scheduler(const Scheduler* scheduler);
+void putTask(Scheduler* scheduler, const Task* task);
+
+void printScheduler(const Scheduler* scheduler);
 
 double schedulerTasks(Scheduler* scheduler);
 
 bool isFull(Scheduler* scheduer);
 
-void pushTaskToPush(Scheduler* scheduler);
+void RemovingCPU_PuttingScheduler(Scheduler* scheduler);

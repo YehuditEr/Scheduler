@@ -7,19 +7,35 @@
 
 int main() {
 
-	Scheduler* scheduler = scheduler_init();
+	//TypeTask* type = getTypeTaskByPriority(1);
+	//printf("priority: %d\n", getPriority(type));
+	//printf("name: %s\n", getName(type));
+	//printf("time to byte: %f\n", getTimeToByte(type));
 
-	enqueue_task(scheduler, create_random_task());
-	enqueue_task(scheduler, create_random_task());
-	enqueue_task(scheduler, create_random_task());
-	enqueue_task(scheduler, create_random_task());
-	enqueue_task(scheduler, create_random_task());
+	//Task* task1 = createTask(1, 2);
+	//printTask(task1);
+	//Task* task2 = createTask(2, 2);
+	//printTask(task2);
+	//Task* task3 = createTask(3, 2);
+	//printTask(task3);
+	//Task* task4 = createRandomTask();
+	//printTask(task4);
+	//Task* task5 = createTask(4, 2);
+	//printTask(task5);
+
+	Scheduler* scheduler = initScheduler();
+
+	putTask(scheduler, createRandomTask());
+	putTask(scheduler, createRandomTask());
+	putTask(scheduler, createRandomTask());
+	putTask(scheduler, createRandomTask());
+	putTask(scheduler, createRandomTask());
 
 
 	int time_task;
 
-	printf("\n\tBedore scheduler use queue %d\n", scheduler->scheduling->current_queue);
-	print_scheduler(scheduler);
+	printf("\n\tBedore scheduler use queue %d\n", scheduler->scheduling->currentQueue);
+	printScheduler(scheduler);
 
 	while (1)
 	{
@@ -28,13 +44,13 @@ int main() {
 		printf("\n\n\n");
 		while (start+time_task > time(NULL) && !isFull(scheduler))
 		{
-			Task* t = create_random_task();
-			printf("\t%d,", t->Id);
-			enqueue_task(scheduler, t);
+			Task* t = createRandomTask();
+			printf("\t%d,", t->id);
+			putTask(scheduler, t);
 		}
 		printf("\n\n\n");
-		pushTaskToPush(scheduler);
-		print_scheduler(scheduler);
+		RemovingCPU_PuttingScheduler(scheduler);
+		printScheduler(scheduler);
 		//while (start + time_task > time(NULL));
 	}
 
