@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <time.h>
-
+#include <Windows.h>
 #include "Scheduler.h"
 #include "Queue.h"
 
@@ -51,9 +51,9 @@ void enqueue_task(Scheduler* scheduler, const Task* task) {
 
 Task* task_to_push = NULL;
 
-double dequeue_task(Scheduler* scheduler, int num_queue, double max_time) {
+double dequeue_task(Scheduler* scheduler, int num_queue, double max_time_in_queue) {
 
-	assert(max_time <= 10);
+	assert(max_time_in_queue <= 10);
 
 	Task* task = queue_dequeue(scheduler->queues[num_queue]);
 	if (task == NULL)
@@ -66,15 +66,16 @@ double dequeue_task(Scheduler* scheduler, int num_queue, double max_time) {
 	if (task == NULL)
 		return 0;
 	double time_task = task->size * task->typeTask->timeToByte;
-	if (time_task <= max_time) {
-		return time_task;
+	if (time_task <= max_time_in_queue) {
 		scheduler->num_tasks--;
+		return time_task;
+		
 	}
 	else {
-		task->size -= (max_time / task->typeTask->timeToByte);
+		task->size -= (max_time_in_queue / task->typeTask->timeToByte);
 		task_to_push = task;
 		//queue_enqueue(scheduler->queues[num_queue], task);
-		return max_time;
+		return max_time_in_queue;
 	}
 
 }
@@ -131,4 +132,17 @@ double schedulerTasks(Scheduler* scheduler) {
 
 bool isFull(Scheduler* scheduer) {
 	return scheduer->num_tasks == MAX_TASKS;
+}
+
+void creator_activation(double time_task,  Scheduler* scheduler) {
+	time_t start = time(NULL);
+
+	while (start + time_task > time(NULL) && !isFull(scheduler))
+	{
+		double milisecond = (rand() % 10)+1;
+		Sleep(milisecond);
+		Task* t = create_random_task();
+		printf("\t%d,", t->Id);
+		enqueue_task(scheduler, t);
+	}
 }
