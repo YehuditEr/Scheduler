@@ -2,6 +2,7 @@
 #include "TypeTask.h"
 
 struct Task {
+	int Id;
 	TypeTask* typeTask;
 	double size;
 	double timeOut;

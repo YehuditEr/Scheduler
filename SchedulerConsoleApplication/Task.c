@@ -21,10 +21,16 @@ void task_free(Task* task) {
 
 
 void print_task(const Task* task) {
+	if (task == NULL) {
+		printf("\nTask is NULL");
+		return;
+	}
 	printf("\nTask: { ");
 	print_type(task->typeTask);
-	printf(", size: %f, time-out: %f }\n", task->size, task->timeOut);
+	printf(", id: %d, size: %f, time-out: %f }\n",task->Id, task->size, task->timeOut);
 }
+
+int id = 0;
 
 Task* create_random_task() {
 	TypeTask** typeTaskArr = calloc(3, sizeof(TypeTask));
@@ -37,6 +43,7 @@ Task* create_random_task() {
 	type_init_values(typeTaskArr[1], 2, "delete", 0.2);
 	type_init_values(typeTaskArr[2],  3, "write", 0.3);
 	Task* task = task_init();
+	task->Id = id++;
 	int type = (rand() % 3) + 1;
 	task->typeTask = typeTaskArr[type - 1];
 	if (type == 1) {

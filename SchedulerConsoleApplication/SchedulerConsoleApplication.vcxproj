@@ -134,6 +134,7 @@
     <ClCompile Include="TypeTask.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DefinationsOfSize.h" />
     <ClInclude Include="Queue.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scheduler.h" />
