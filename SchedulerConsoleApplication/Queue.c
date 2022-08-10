@@ -12,7 +12,7 @@ void queue_free(Queue* queue) {
     free(queue->data);
     free(queue);
 }
-
+//Dynamic queue memory allocation and values putting
 Queue* queue_init(void) {
     Queue* queue = calloc(1, sizeof * queue);
     assert(queue);
@@ -24,7 +24,7 @@ Queue* queue_init(void) {
     queue->tail = 0;
     return queue;
 }
-
+//remove an item from queue
 void* queue_dequeue(Queue* queue) {
     assert(queue);
     if (queue->size == 0) {
@@ -35,7 +35,7 @@ void* queue_dequeue(Queue* queue) {
     queue->size--;
     return item;
 }
-
+//enter a new item to queue
 void queue_enqueue(Queue* queue, void* item) {
     assert(queue);
     assert(item);
@@ -62,7 +62,7 @@ void queue_enqueue(Queue* queue, void* item) {
     queue->size++;
 
 }
-
+//checking if the queue is empty
 bool isEmptyQueue(const Queue* queue) {
     assert(queue);
     return queue->size == 0;
@@ -80,12 +80,12 @@ void queue_iterate(const Queue* queue, void (*fn)(void*)) {
         fn(x);
     }
 }
-
+//get size of queue
 size_t queue_size(const Queue* queue) {
     assert(queue);
     return queue->size;
 }
-
+//print queue values
 void print_queue(const Queue* queue, void (*fn)(void*)) {
     queue_iterate(queue, fn);
 }

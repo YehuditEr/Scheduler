@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <time.h>
-
+#include <Windows.h>
 #include "Scheduler.h"
 #include "Queue.h"
 
@@ -305,4 +305,17 @@ Task* getTaskInCPU(Scheduler* scheduler) {
 
 void setTaskInCPU(Scheduler* scheduler, Task* task) {
 	scheduler->scheduling->taskInCPU = task;
+}
+
+//scheduling the  tasks creator function in random way
+inline void tasksCreatorActivation(Scheduler* scheduler,double time_task) {
+	time_t start = time(NULL);
+
+	while (start + time_task > time(NULL) && !isFull(scheduler))
+	{
+		double milisecond = (rand() % 10) + 1;
+		Sleep(milisecond);
+		Task* t = createRandomTask();
+		putTask(scheduler, t);
+	}
 }

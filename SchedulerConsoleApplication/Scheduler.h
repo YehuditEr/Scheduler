@@ -41,3 +41,5 @@ double schedulerTasks(Scheduler* scheduler);
 bool isFull(Scheduler* scheduer);
 
 void removingCPU_PuttingScheduler(Scheduler* scheduler);
+
+inline void tasksCreatorActivation( Scheduler* scheduler,double time_task);

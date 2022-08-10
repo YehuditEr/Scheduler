@@ -42,11 +42,7 @@ int main() {
 		time_task = schedulerTasks(scheduler);
 		time_t start = time(NULL);
 		printf("\n\n\n");
-		while (start+time_task > time(NULL) && !isFull(scheduler))
-		{
-			Task* t = createRandomTask();
-			putTask(scheduler, t);
-		}
+		tasksCreatorActivation(scheduler, time_task);
 		printf("\n\n\n");
 		removingCPU_PuttingScheduler(scheduler);
 		printScheduler(scheduler);
