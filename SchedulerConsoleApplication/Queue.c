@@ -1,10 +1,11 @@
 #include "queue.h"
+#include "DefinationsOfSize.h"
 
 #include <assert.h>
 #include <stddef.h>
 #include <stdio.h>
 
-#define CAPACITY 8
+
 
 void queue_free(Queue* queue) {
     assert(queue);
@@ -15,7 +16,7 @@ void queue_free(Queue* queue) {
 Queue* queue_init(void) {
     Queue* queue = calloc(1, sizeof * queue);
     assert(queue);
-    queue->capacity = CAPACITY;
+    queue->capacity = MAX_TASKS;
     queue->size = 0;
     queue->data = calloc(queue->capacity, sizeof * queue->data);
     assert(queue->data);
@@ -32,7 +33,6 @@ void* queue_dequeue(Queue* queue) {
     void* item = queue->data[queue->head];
     queue->head = (queue->head + 1) % queue->capacity;
     queue->size--;
-    assert(item);
     return item;
 }
 
@@ -40,8 +40,6 @@ void queue_enqueue(Queue* queue, void* item) {
     assert(queue);
     assert(item);
     queue->data[queue->tail] = item;
-    queue->size++;
-
     // Resize the underlying array if we've reached capacity.
     if (queue->size == queue->capacity) {
         printf("The queue full!!!");
@@ -61,9 +59,11 @@ void queue_enqueue(Queue* queue, void* item) {
     }
 
     queue->tail = (queue->tail + 1) % queue->capacity;
+    queue->size++;
+
 }
 
-bool queue_is_empty(const Queue* queue) {
+bool isEmptyQueue(const Queue* queue) {
     assert(queue);
     return queue->size == 0;
 }

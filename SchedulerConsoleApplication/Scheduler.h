@@ -2,29 +2,42 @@
 
 #include "Queue.h"
 #include "Task.h"
+#include "DefinationsOfSize.h"
 
-#define NUM_PRIORITIES 3
-#define MAX_TASKS 8
-#define MAX_SIZE_OF_TASK 20
+#include <stdbool.h>
+
+/// <summary>
+/// Saves the timing state between queues
+/// </summary>
+struct Scheduling {
+	int currentQueue;
+	int timeInCurrentQueue;
+	Task* taskInCPU;
+};
+
+typedef struct Scheduling Scheduling;
 
 struct Scheduler
 {
 	Queue** queues;
-	int num_tasks;
-
+	int numTasks;
+	struct Scheduling* scheduling;
 };
 
 typedef struct Scheduler Scheduler;
 
-Scheduler* scheduler_init();
+static int time_to_queue[NUM_PRIORITIES] = { QUANTUM_QUEUE1 ,QUANTUM_QUEUE2, QUANTUM_QUEUE3 };
 
-void scheduler_free(Scheduler* scheduler);
+Scheduler* initScheduler();
 
-void enqueue_task(Scheduler* scheduler, const Task* task);
+void freeScheduler(Scheduler* scheduler);
 
-//Task* dequeue_task(Scheduler* scheduler);
+void putTask(Scheduler* scheduler, const Task* task);
 
-void print_scheduler(const Scheduler* scheduler);
+void printScheduler(const Scheduler* scheduler);
 
-void timer_task(int time);
+double schedulerTasks(Scheduler* scheduler);
 
+bool isFull(Scheduler* scheduer);
+
+void removingCPU_PuttingScheduler(Scheduler* scheduler);

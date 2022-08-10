@@ -68,7 +68,7 @@ Queue * queue_init(void);
 void* queue_dequeue(Queue * queue);
 void   queue_enqueue(Queue * queue, void* item);
 
-bool   queue_is_empty(const Queue * queue);
+bool   isEmptyQueue(const Queue * queue);
 void   queue_iterate(const Queue * queue, void (*fn)(void*));
 size_t queue_size(const Queue * queue);
 

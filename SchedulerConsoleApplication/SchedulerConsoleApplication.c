@@ -2,16 +2,55 @@
 #include "TypeTask.h"
 #include "Scheduler.h"
 
-int main()
-{
-	Scheduler* scheduler2 = scheduler_init();
-	for (size_t i = 0; i < 10; i++)
+#include <time.h>
+
+
+int main() {
+
+	//TypeTask* type = getTypeTaskByPriority(1);
+	//printf("priority: %d\n", getPriority(type));
+	//printf("name: %s\n", getName(type));
+	//printf("time to byte: %f\n", getTimeToByte(type));
+
+	//Task* task1 = createTask(1, 2);
+	//printTask(task1);
+	//Task* task2 = createTask(2, 2);
+	//printTask(task2);
+	//Task* task3 = createTask(3, 2);
+	//printTask(task3);
+	//Task* task4 = createRandomTask();
+	//printTask(task4);
+	//Task* task5 = createTask(4, 2);
+	//printTask(task5);
+
+	Scheduler* scheduler = initScheduler();
+
+	putTask(scheduler, createRandomTask());
+	putTask(scheduler, createRandomTask());
+	putTask(scheduler, createRandomTask());
+	putTask(scheduler, createRandomTask());
+	putTask(scheduler, createRandomTask());
+
+
+	int time_task;
+
+	printf("\n\tBedore scheduler use queue %d\n", scheduler->scheduling->currentQueue);
+	printScheduler(scheduler);
+
+	while (1)
 	{
-		enqueue_task(scheduler2, create_random_task());
+		time_task = schedulerTasks(scheduler);
+		time_t start = time(NULL);
+		printf("\n\n\n");
+		while (start+time_task > time(NULL) && !isFull(scheduler))
+		{
+			Task* t = createRandomTask();
+			putTask(scheduler, t);
+		}
+		printf("\n\n\n");
+		removingCPU_PuttingScheduler(scheduler);
+		printScheduler(scheduler);
+		//while (start + time_task > time(NULL));
 	}
-
-	print_scheduler(scheduler2);
-	free(scheduler2);
-
 
 }

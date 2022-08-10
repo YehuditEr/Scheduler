@@ -2,18 +2,47 @@
 #include "TypeTask.h"
 
 struct Task {
+	int id;
 	TypeTask* typeTask;
 	double size;
-	double timeOut;
-	//clock_t  Clock;
 };
 
 typedef struct Task Task;
 
-Task* task_init();
+static int id = 0;
 
-void task_free(Task* task);
+/// <summary>
+/// Create task with values
+/// </summary>
+/// <param name="priority"></param>
+/// <param name="size"></param>
+/// <returns>Pointer to task</returns>
+Task* createTask(int priority, double size);
 
-void print_task(const Task* task);
 
-Task* create_random_task();
+/// <summary>
+/// Freeing dynamically allocated memory
+/// </summary>
+/// <param name="task">- Pointer to task</param>
+void freeTask(Task* task);
+
+
+/// <summary>
+/// Print all values of task
+/// </summary>
+/// <param name="task">- Pointer to task</param>
+void printTask(const Task* task);
+
+
+/// <summary>
+/// Create task with random values
+/// </summary>
+/// <returns>Pointer to task</returns>
+Task* createRandomTask();
+
+
+int getId(Task* task);
+
+TypeTask* getTypeTask(Task* task);
+
+double getSize(Task* task);
