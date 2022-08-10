@@ -40,4 +40,4 @@ double schedulerTasks(Scheduler* scheduler);
 
 bool isFull(Scheduler* scheduer);
 
-void RemovingCPU_PuttingScheduler(Scheduler* scheduler);
+void removingCPU_PuttingScheduler(Scheduler* scheduler);

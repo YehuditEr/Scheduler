@@ -9,6 +9,7 @@
 
 #pragma region Declarations of functions
 Scheduler* initScheduler();
+double getQuantumToQueue(int queue);
 Scheduling* initScheduling();
 void freeScheduler(Scheduler* scheduler);
 void freeScheduling(Scheduling* scheduling);
@@ -125,9 +126,13 @@ double removeTaskAndChangeSize(Scheduler* scheduler, int numQueue, double maxTim
 
 }
 
-void RemovingCPU_PuttingScheduler(Scheduler* scheduler) {
-	if (getTaskInCPU(scheduler) != NULL)
-		queue_enqueue(getQueueOfPriority(scheduler, getPriority(getTaskInCPU(scheduler))), getTaskInCPU(scheduler) - 1);
+void removingCPU_PuttingScheduler(Scheduler* scheduler) {
+	if (getTaskInCPU(scheduler) != NULL) 
+	{
+		int priority = getPriority(getTypeTask(getTaskInCPU(scheduler)));
+		Queue* queue = getQueueOfPriority(scheduler, priority);
+		queue_enqueue(queue, getTaskInCPU(scheduler));
+	}
 	setTaskInCPU(scheduler, NULL);
 }
 
@@ -149,17 +154,18 @@ double schedulerTasks(Scheduler* scheduler) {
 	int numQueue = getCurrentQueueNotEmpty(scheduler);
 	assert(numQueue != -1);
 
-	printf("\n\tuse queue: %d\n", numQueue);//+1
+	printf("\n\tuse queue: %d\n", numQueue);
 
 	if (!isRemainingTimeToCurrentQueue(scheduler)) {
 		setTimeInCurrentQueue(scheduler, 0);
+		nextCurrentQueue(scheduler);
 		numQueue = getCurrentQueueNotEmpty(scheduler);
 		assert(numQueue != -1);
 	}
 
 	int remainingTime = remainingTimeToCurrentQueue(scheduler);
 	int quantumToTask;
-	if ( QUANTUM_TASK < remainingTime)
+	if (QUANTUM_TASK < remainingTime)
 		quantumToTask = QUANTUM_TASK;
 	else
 		quantumToTask = remainingTime;
@@ -172,44 +178,33 @@ double schedulerTasks(Scheduler* scheduler) {
 }
 
 bool isRemainingTimeToCurrentQueue(Scheduler* scheduler) {
-	int currentQueue = getCurrentQueue(scheduler);
-	double maxTimeInQueue;
-	switch (currentQueue)
+	/*int currentQueue = getCurrentQueue(scheduler);
+	double maxTimeInQueue = getQuantumToQueue(scheduler);
+	return getTimeInCurrentQueue(scheduler) < maxTimeInQueue;*/
+	return remainingTimeToCurrentQueue(scheduler) > 0;
+}
+
+double getQuantumToQueue(int numQueue) {
+	switch (numQueue)
 	{
 		case 0:
-			maxTimeInQueue = QUANTUM_QUEUE1;
+			return QUANTUM_QUEUE1;
 			break;
 		case 1:
-			maxTimeInQueue = QUANTUM_QUEUE2;
+			return QUANTUM_QUEUE2;
 			break;
-		case 3:
-			maxTimeInQueue = QUANTUM_QUEUE3;
+		case 2:
+			return QUANTUM_QUEUE3;
 			break;
 		default:
 			printf("Current queue not valid");
 			exit(-1);
 	}
-	return getTimeInCurrentQueue(scheduler) < maxTimeInQueue;
 }
 
 double remainingTimeToCurrentQueue(Scheduler* scheduler) {
 	int currentQueue = getCurrentQueue(scheduler);
-	double maxTimeInQueue;
-	switch (currentQueue)
-	{
-	case 0:
-		maxTimeInQueue = QUANTUM_QUEUE1;
-		break;
-	case 1:
-		maxTimeInQueue = QUANTUM_QUEUE2;
-		break;
-	case 3:
-		maxTimeInQueue = QUANTUM_QUEUE3;
-		break;
-	default:
-		printf("Current queue not valid");
-		exit(-1);
-	}
+	double maxTimeInQueue = getQuantumToQueue(currentQueue);
 	return maxTimeInQueue - getTimeInCurrentQueue(scheduler);
 }
 

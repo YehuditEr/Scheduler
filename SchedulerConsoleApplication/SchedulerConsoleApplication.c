@@ -45,11 +45,10 @@ int main() {
 		while (start+time_task > time(NULL) && !isFull(scheduler))
 		{
 			Task* t = createRandomTask();
-			printf("\t%d,", t->id);
 			putTask(scheduler, t);
 		}
 		printf("\n\n\n");
-		RemovingCPU_PuttingScheduler(scheduler);
+		removingCPU_PuttingScheduler(scheduler);
 		printScheduler(scheduler);
 		//while (start + time_task > time(NULL));
 	}
