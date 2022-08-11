@@ -1,4 +1,4 @@
-#include "TypeTask.h"
+#include "Priority.h"
 
 static Priority** priorities;
 

@@ -24,7 +24,7 @@
     <ClCompile Include="Task.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TypeTask.c">
+    <ClCompile Include="Priority.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Scheduler.c">
@@ -41,7 +41,7 @@
     <ClInclude Include="Task.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TypeTask.h">
+    <ClInclude Include="Priority.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scheduler.h">

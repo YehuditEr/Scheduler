@@ -131,7 +131,7 @@
     <ClCompile Include="Scheduler.c" />
     <ClCompile Include="SchedulerConsoleApplication.c" />
     <ClCompile Include="Task.c" />
-    <ClCompile Include="TypeTask.c" />
+    <ClCompile Include="Priority.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DefinationsOfSize.h" />
@@ -139,7 +139,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scheduler.h" />
     <ClInclude Include="Task.h" />
-    <ClInclude Include="TypeTask.h" />
+    <ClInclude Include="Priority.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SchedulerConsoleApplication.rc" />

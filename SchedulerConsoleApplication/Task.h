@@ -1,5 +1,5 @@
 #pragma once
-#include "TypeTask.h"
+#include "Priority.h"
 
 struct Task {
 	int id;

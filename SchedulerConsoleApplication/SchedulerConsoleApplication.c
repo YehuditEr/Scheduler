@@ -1,5 +1,5 @@
 ﻿#include "Task.h"
-#include "TypeTask.h"
+#include "Priority.h"
 #include "Scheduler.h"
 
 #include <time.h>
