@@ -3,7 +3,7 @@
 
 struct Task {
 	int id;
-	TypeTask* typeTask;
+	int priority;
 	double size;
 };
 
@@ -40,9 +40,15 @@ void printTask(const Task* task);
 /// <returns>Pointer to task</returns>
 Task* createRandomTask();
 
+double getTimeToRunAllTask(Task* task);
+
+double getPortionOfTaskCompletedOnTime(Task* task, double time);
+
 
 int getId(Task* task);
 
-TypeTask* getTypeTask(Task* task);
+int getPriority(Task* task);
 
 double getSize(Task* task);
+
+Task* dynamicAllocationTask();

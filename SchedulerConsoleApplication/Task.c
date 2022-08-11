@@ -7,15 +7,8 @@
 #include <stdio.h>
 
 #pragma region Declarations of functions
-Task* createTask(int priority, double size);
-void freeTask(Task* task);
-void printTask(const Task* task);
-Task* createRandomTask();
-int getId(Task* task);
 void setId(Task* task, int id);
-TypeTask* getTypeTask(Task* task);
-void setTypeTask(Task* task, TypeTask* typeTask);
-double getSize(Task* task);
+void setPriority(Task* task, int priority);
 void setSize(Task* task, double size);
 double getRandomSizeByPriority(int priority);
 int getRandomPriority();
@@ -27,7 +20,7 @@ Task* createTask(int priority, double size) {
 	Task* task = calloc(1, sizeof(Task));
 	assert(task);
 	setId(task, id++);
-	setTypeTask(task, getTypeTaskByPriority(priority));
+	setPriority(task, priority);
 	setSize(task, size);
 	return task;
 }
@@ -44,8 +37,12 @@ Task* createRandomTask() {
 /* Freeing dynamically allocated memory */
 void freeTask(Task* task) {
 	assert(task);
-	freeTypeTask(getTypeTask(task));
 	free(task);
+}
+
+Task* dynamicAllocationTask() {
+	Task* task = calloc(1, sizeof(Task));
+	return task;
 }
 
 
@@ -53,8 +50,17 @@ void freeTask(Task* task) {
 void printTask(const Task* task) {
 	assert(task);
 	printf("\nTask: { ");
-	printTypeTask(getTypeTask(task));
-	printf(", id: %d, size: %f }\n", getId(task), getSize(task));
+	printf("id: %d, priority: %d, size : %f }\n", getId(task), getPriority(task), getSize(task));
+}
+
+int getPriority(Task* task) {
+	assert(task);
+	return task->priority;
+}
+void setPriority(Task* task, int priority) {
+	assert(task);
+	assert(isValidPriority(priority));
+	task->priority = priority;
 }
 
 
@@ -67,15 +73,6 @@ void setId(Task* task, int id) {
 	task->id = id;
 }
 
-TypeTask* getTypeTask(Task* task) {
-	assert(task);
-	return task->typeTask;
-}
-void setTypeTask(Task* task, TypeTask* typeTask) {
-	assert(task);
-	assert(typeTask);
-	task->typeTask = typeTask;
-}
 
 double getSize(Task* task) {
 	assert(task);
@@ -103,4 +100,14 @@ double getRandomSizeByPriority(int priority) {
 }
 int getRandomPriority() {
 	return (rand() % NUM_PRIORITIES) + 1;
+}
+
+double getTimeToRunAllTask(Task* task) {
+	assert(task);
+	return task->size * getTimeToByte(getPriority(task));
+}
+
+double getPortionOfTaskCompletedOnTime(Task* task, double time) {
+	assert(task);
+	return time / getTimeToByte(getPriority(task));
 }
