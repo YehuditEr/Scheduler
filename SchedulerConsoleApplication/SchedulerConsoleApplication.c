@@ -31,7 +31,7 @@ int main() {
 	putTask(scheduler, createRandomTask());
 	putTask(scheduler, createRandomTask());
 
-
+//this main loop shall be moved to test proj
 	int time_task;
 
 	printf("\n\tBedore scheduler use queue %d\n", scheduler->scheduling->currentQueue);
@@ -42,7 +42,7 @@ int main() {
 		time_task = schedulerTasks(scheduler);
 		time_t start = time(NULL);
 		printf("\n\n\n");
-		while (start+time_task > time(NULL) && !isFull(scheduler))
+		while ((start+time_task > time(NULL)) && !isFull(scheduler))
 		{
 			Task* t = createRandomTask();
 			putTask(scheduler, t);

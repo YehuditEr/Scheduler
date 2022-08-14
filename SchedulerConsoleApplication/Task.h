@@ -1,6 +1,8 @@
 #pragma once
 #include "TypeTask.h"
 
+//this file shall be moved to test proj
+
 struct Task {
 	int id;
 	TypeTask* typeTask;

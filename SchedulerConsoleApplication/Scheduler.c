@@ -7,6 +7,7 @@
 #include "Scheduler.h"
 #include "Queue.h"
 
+//some of the declaration shall be public and in H file.
 #pragma region Declarations of functions
 Scheduler* initScheduler();
 double getQuantumToQueue(int queue);
@@ -39,7 +40,7 @@ bool isEmptyScheduler(Scheduler* scheduler);
 bool isEmptyScheduler(Scheduler* scheduler);
 #pragma endregion
 
-
+//add func description
 Scheduler* initScheduler() {
 	Scheduler* scheduler = calloc(1, sizeof(Scheduler));
 	assert(scheduler);
@@ -52,6 +53,7 @@ Scheduler* initScheduler() {
 	return scheduler;
 }
 
+//add func description
 Scheduling* initScheduling() {
 	Scheduling* scheduling = calloc(1, sizeof(Scheduling));
 	assert(scheduling);
@@ -62,6 +64,7 @@ Scheduling* initScheduling() {
 	scheduling->timeInCurrentQueue = 0;
 }
 
+
 void freeScheduler(Scheduler* scheduler) {
 	assert(scheduler);
 	freeScheduling(scheduler->scheduling);
@@ -69,16 +72,19 @@ void freeScheduler(Scheduler* scheduler) {
 		queue_free(scheduler->queues[i]);
 }
 
+//rename
 void freeScheduling(Scheduling* scheduling) {
 	assert(scheduling);
 	freeTask(scheduling->taskInCPU);
 	free(scheduling);
 }
 
+//rename:push task
+//add func description
 void putTask(Scheduler* scheduler, const Task* task) {
 	assert(scheduler);
 	assert(task);
-	if (isFull(scheduler)) {
+	if (isFull(scheduler)) {//what is full? rename func
 		printf("\nThe scheduler full!!\n");
 		return;
 	}
@@ -91,9 +97,10 @@ void putTask(Scheduler* scheduler, const Task* task) {
 	Queue* queue = getQueueOfPriority(scheduler, getPriority(getTypeTask(task)));
 	printf("\n\tput task id:%d, timeOut: %d", task->id, task->typeTask->timeOut);
 	queue_enqueue(queue, task);
-	scheduler->numTasks++;
+	scheduler->numTasks++;// why are you conuting twice? in here and in queue
 }
 
+//add func description
 double removeTaskAndChangeSize(Scheduler* scheduler, int numQueue, double maxTime) {
 
 	assert(maxTime <= QUANTUM_TASK);
@@ -101,11 +108,11 @@ double removeTaskAndChangeSize(Scheduler* scheduler, int numQueue, double maxTim
 	Task* task = queue_dequeue(getQueueOfPriority(scheduler, numQueue + 1));
 
 	if (task == NULL) {
-		printf("\n\tNOT TASK TO REMOVE FROM QUEUE %d....\n", numQueue);
+		printf("\n\tNO TASK TO REMOVE FROM QUEUE %d....\n", numQueue);
 		return 0;
 	}
 	else
-		printf("\nTask remove: %d", task->id);
+		printf("\nTask removed: %d", task->id);
 
 	double timeTask = getTimeToRunAllTask(task);
 
@@ -123,9 +130,10 @@ double removeTaskAndChangeSize(Scheduler* scheduler, int numQueue, double maxTim
 		setTaskInCPU(scheduler, task);
 		return maxTime;
 	}
-
+//add print: insert to CPU
 }
 
+//rename: no ing in func name
 void removingCPU_PuttingScheduler(Scheduler* scheduler) {
 	if (getTaskInCPU(scheduler) != NULL) 
 	{
@@ -145,13 +153,14 @@ void printScheduler(const Scheduler* scheduler) {
 	}
 }
 
+//add func description
 double schedulerTasks(Scheduler* scheduler) {
 	if (isEmptyScheduler(scheduler)) {
 		printf("Scheduler is empty");
 		return -1;
 	}
 
-	int numQueue = getCurrentQueueNotEmpty(scheduler);
+	int numQueue = getCurrentQueueNotEmpty(scheduler); //rename:get current task count in queue
 	assert(numQueue != -1);
 
 	printf("\n\tuse queue: %d\n", numQueue);
@@ -181,7 +190,7 @@ bool isRemainingTimeToCurrentQueue(Scheduler* scheduler) {
 	/*int currentQueue = getCurrentQueue(scheduler);
 	double maxTimeInQueue = getQuantumToQueue(scheduler);
 	return getTimeInCurrentQueue(scheduler) < maxTimeInQueue;*/
-	return remainingTimeToCurrentQueue(scheduler) > 0;
+	return (remainingTimeToCurrentQueue(scheduler) > 0);
 }
 
 double getQuantumToQueue(int numQueue) {

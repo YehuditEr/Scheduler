@@ -9,14 +9,15 @@
 /// <summary>
 /// Saves the timing state between queues
 /// </summary>
-struct Scheduling {
+struct Scheduling {//rename
 	int currentQueue;
 	int timeInCurrentQueue;
 	Task* taskInCPU;
 };
 
-typedef struct Scheduling Scheduling;
+typedef struct Scheduling Scheduling;//what is the diff between queue and scheduling?
 
+//rename: SchedulerMetaData
 struct Scheduler
 {
 	Queue** queues;

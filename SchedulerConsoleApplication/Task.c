@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <stdio.h>
 
+//this file shall be moved to test proj
 #pragma region Declarations of functions
 Task* createTask(int priority, double size);
 void freeTask(Task* task);

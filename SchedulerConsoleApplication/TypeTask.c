@@ -1,5 +1,9 @@
 #include "TypeTask.h"
 
+
+//use spaces please!
+//this file shall be moved to test proj
+
 #pragma region Declarations of functions
 /// <summary>
 ///Create TypeTask with all values, called only from the function getTypeTaskByPriority

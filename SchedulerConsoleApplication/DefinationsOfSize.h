@@ -1,5 +1,5 @@
 #pragma once
-
+//great!!!
 #define NUM_PRIORITIES 3
 #define MAX_TASKS 8
 #define MAX_SIZE_OF_TASK 20

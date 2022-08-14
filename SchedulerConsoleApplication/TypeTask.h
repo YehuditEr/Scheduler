@@ -1,3 +1,5 @@
+//this file shall be moved to test proj
+
 #pragma once
 #pragma region Defines
 #define READ "read"
