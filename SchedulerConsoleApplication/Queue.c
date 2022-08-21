@@ -63,7 +63,7 @@ void queue_enqueue(Queue* queue, void* item) {
 
 }
 
-bool isEmptyQueue(const Queue* queue) {
+bool isQueueEmpty(const Queue* queue) {
     assert(queue);
     return queue->size == 0;
 }
@@ -81,7 +81,7 @@ void queue_iterate(const Queue* queue, void (*fn)(void*)) {
     }
 }
 
-size_t queue_size(const Queue* queue) {
+size_t get_queue_size(const Queue* queue) {
     assert(queue);
     return queue->size;
 }

@@ -10,15 +10,15 @@ void init() {
 int main() {
 	init();
 	Task* t = createRandomTask();
-	putTask(t);
+	pushTask(t);
 	nextTask();
 	while (1)
 	{
-		if (isLeftTimeToTaskInCpu()) {
+		if (isLeftTimeToRunTaskInCpu()) {
 			changeSizeOfTaskInCPU();
-			if(!isSchedulerFull()){
+			if(!isSchedulerQueuesFull()){
 				t = createRandomTask();
-				putTask(t);
+				pushTask(t);
 			}
 			else {
 				printf("");

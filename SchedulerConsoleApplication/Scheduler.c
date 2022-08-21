@@ -10,7 +10,7 @@ void freeMetaData();
 void freeTaskMetaData();
 
 Queue** getQueues();
-Queue* getQueue(int priority);
+Queue* getQueueByPriority(int priority);
 void setQueues(Queue* queues);
 int getNumTasks(); 
 void setNumTasks(int numTasks);
@@ -40,7 +40,7 @@ int findQueueNotEmpty();
 void decreaseNumTask();
 void increaseNumTask();
 
-bool isLeftTimeToTaskInCpu();
+bool isLeftTimeToRunTaskInCpu();
 //bool isLeftTimeToCurrentQueue();
 
 #pragma endregion
@@ -84,7 +84,7 @@ void initTaskMetaData() {
 	DataStructure->metaData->taskInCPUMetaData = calloc(1, sizeof(TaskInCpuMetaData*));
 	assert(DataStructure->metaData->taskInCPUMetaData);
 	DataStructure->metaData->taskInCPUMetaData->startTimeOfTaskInCPU = 0;
-	DataStructure->metaData->taskInCPUMetaData->lastUpdateSize = 0;
+	DataStructure->metaData->taskInCPUMetaData->lastUpdateTime = 0;
 	DataStructure->metaData->taskInCPUMetaData->timeToRunInCPU = 0;
 }
 #pragma endregion
@@ -115,7 +115,7 @@ void freeTaskMetaData() {
 	assert(DataStructure->metaData);
 	assert(DataStructure->metaData->taskInCPUMetaData);
 	free(DataStructure->metaData->taskInCPUMetaData->startTimeOfTaskInCPU);
-	free(DataStructure->metaData->taskInCPUMetaData->lastUpdateSize);
+	free(DataStructure->metaData->taskInCPUMetaData->lastUpdateTime);
 	freeTask(DataStructure->metaData->taskInCPUMetaData->taskInCPU);
 	free(DataStructure->metaData);
 }
@@ -123,20 +123,25 @@ void freeTaskMetaData() {
 #pragma endregion
 
 #pragma region Getters & Setters of SchedulerDataSructure
+
+/* return queues of DataStructure */
 Queue** getQueues() {
 	Queue** queues = DataStructure->queues;
 	return DataStructure->queues;
 }
 
-Queue* getQueue(int priority) {
+/* return queue of priority from DataStructure */
+Queue* getQueueByPriority(int priority) {
 	return getQueues()[priority - 1];
 }
 
+/* return num tasks that exist in DataStructure */
 int getNumTasks() {
 	int numTasks = DataStructure->numTasks;
 	return DataStructure->numTasks;
 }
 
+/* return scheduler metaData of DataStructure*/
 SchedulerMetaData* getSchedulerMetaData() {
 	return DataStructure->metaData;
 }
@@ -190,7 +195,7 @@ time_t getStartTimeOfTaskInCPU() {
 }
 
 time_t getLastUpdateSize() {
-	return getTaskInCPUMetaData()->lastUpdateSize;
+	return getTaskInCPUMetaData()->lastUpdateTime;
 }
 
 double getTimeToRunInCPU() {
@@ -206,26 +211,27 @@ void setStartTimeOfTaskInCPU(time_t startTimeOfTaskInCPU) {
 	getTaskInCPUMetaData()->startTimeOfTaskInCPU = startTimeOfTaskInCPU;
 }
 
-void setLastUpdateSize(time_t lastUpdateSize) {
-	getTaskInCPUMetaData()->lastUpdateSize = lastUpdateSize;
+void setLastUpdateSize(time_t lastUpdateTime) {
+	getTaskInCPUMetaData()->lastUpdateTime = lastUpdateTime;
 }
 
 void setTimeToRunInCPU(double timeToRunInCPU) {
 	getTaskInCPUMetaData()->timeToRunInCPU = timeToRunInCPU;
 }
 
-void setTaskInCpuMetaData(Task* taskInCPU, time_t startTimeOfTaskInCPU,time_t lastUpdateSize, double timeToRunInCPU) {
+void setTaskInCpuMetaData(Task* taskInCPU, time_t startTimeOfTaskInCPU,time_t lastUpdateTime, double timeToRunInCPU) {
 	setTaskInCPU(taskInCPU);
 	setStartTimeOfTaskInCPU(startTimeOfTaskInCPU);
-	setLastUpdateSize(lastUpdateSize);
+	setLastUpdateSize(lastUpdateTime);
 	setTimeToRunInCPU(timeToRunInCPU);
 }
 #pragma endregion
 
-#pragma region Current Queue 
+#pragma region Queues functions
 
+/* return quantum of queue */
 int getQuantumToQueue(int numQueue) {
-
+	assert(isValidNumQueue(numQueue));
 	switch (numQueue)
 	{
 	case 0:
@@ -239,19 +245,22 @@ int getQuantumToQueue(int numQueue) {
 	}
 }
 
+/* Finding a queue that is not empty by going through all the queues until finding a queue with tasks. 
+   If all the queues are empty - 1- is returned. */
 int findQueueNotEmpty() {
 	int i = 1;
-	while (i <= NUM_PRIORITIES && isEmptyQueue(getQueue(getCurrentQueue() + 1)))
+	while (i <= NUM_PRIORITIES && isQueueEmpty(getQueueByPriority(getCurrentQueue() + 1)))
 	{
 		nextQueue();
 		i++;
 	}
 	int currentQueue = getCurrentQueue();
-	if (isEmptyQueue(getQueue(currentQueue + 1)))
+	if (isQueueEmpty(getQueueByPriority(currentQueue + 1)))
 		return -1;
 	return currentQueue;
 }
 
+/* set current queue to be next queue */
 void nextQueue() {
 	setCurrentQueue((getCurrentQueue() + 1) % 3);
 	setStartTimeInCurrentQueue(time(NULL));
@@ -267,21 +276,14 @@ double quantityRemainingForCurrentQueue() {
 
 #pragma endregion
 
-#pragma region Current Task In CPU
-/* Does the task have time left to run on the cpu */
-bool isLeftTimeToTaskInCpu() {
+#pragma region Task In CPU
+/* check if the task have time left to run on the cpu */
+bool isLeftTimeToRunTaskInCpu() {
 	time_t start = getStartTimeOfTaskInCPU();
 	double timeToRun = getTimeToRunInCPU();
 	time_t now = time(NULL);
 	return time(NULL) - start <= timeToRun;
 }
-
-//bool isLeftTimeToCurrentQueue() {
-//	time_t startInCurrentQueue = getStartTimeInCurrentQueue();
-//	time_t now = time(NULL);
-//	double timeToRunInCPU = getTimeToRunInCPU();
-//	return time(NULL) - startInCurrentQueue < timeToRunInCPU;
-//}
 #pragma endregion
 
 #pragma region Scheduer
@@ -305,14 +307,13 @@ void printDataStructure(){
 
 #pragma endregion
 
-
 #pragma region Validation
 bool isValidQuantumTask(double time) {
 	return  QUANTUM_TASK >= time;
 }
 
 bool isValidNumQueue(int numQueue) {
-	return numQueue >= 0 && numQueue < NUM_PRIORITIES;
+	return 0 <= numQueue && NUM_PRIORITIES > numQueue;
 }
 
 bool isValidSizeTask(Task* task) {
@@ -327,17 +328,17 @@ bool isEmptyScheduler() {
 	return  0 >= getNumTasks();
 }
 
-bool isSchedulerFull() {
+bool isSchedulerQueuesFull() {
 	return MAX_TASKS <= getNumTasks();
 }
 #pragma endregion
 
 
-
+/* Scheduling a new task to run on the processor */
 void nextTask() {
 	assert(DataStructure);
 	/* Checking that the task in the processor ran the time allotted to it */
-	if (!isLeftTimeToTaskInCpu()) {
+	if (!isLeftTimeToRunTaskInCpu()) {
 
 		/* Finding a queue in which tasks exist. 
 		   If there are tasks in the current queue, 
@@ -357,7 +358,7 @@ void nextTask() {
 			}
 
 			/* Removing a task from the queue and updating the TaskInCpuMetaData*/
-			Task* task = queue_dequeue(getQueue(currentQueue + 1));
+			Task* task = queue_dequeue(getQueueByPriority(currentQueue + 1));
 			decreaseNumTask();
 			double timeToRunTask = calculateRunTimeOfTask(task);
 			double timeToRunInCpu = MIN(remaimigTimeToQueue, timeToRunTask);
@@ -378,11 +379,11 @@ void nextTask() {
 }
 
 /* Adding a new task to the schedule */
-void putTask(const Task* task) {
+void pushTask(const Task* task) {
 	assert(DataStructure);
 	assert(task);
 
-	if (isSchedulerFull()) {
+	if (isSchedulerQueuesFull()) {
 		printf("\n\tScheduler is full");
 		return;
 	}
@@ -393,7 +394,7 @@ void putTask(const Task* task) {
 		return;
 	}
 
-	Queue* queue = getQueue(getPriority(task));
+	Queue* queue = getQueueByPriority(getPriority(task));
 	assert(queue);
 	queue_enqueue(queue, task);
 	printf("\nPut task: ");
@@ -417,6 +418,6 @@ void saveOrDelteTaskInCPU() {
 	double sizeTask = getSize(getTaskInCPU());
 	printf("\n\t\t\tsaveOrDelteTaskInCPU: sizeTask = %f", sizeTask);
 	if (sizeTask > 0) {
-		putTask(getTaskInCPU());
+		pushTask(getTaskInCPU());
 	}
 }
