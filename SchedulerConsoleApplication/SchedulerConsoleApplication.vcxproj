@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -131,18 +131,17 @@
     <ClCompile Include="Scheduler.c" />
     <ClCompile Include="SchedulerConsoleApplication.c" />
     <ClCompile Include="Task.c" />
-    <ClCompile Include="Priority.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="DefinationsOfSize.h" />
-    <ClInclude Include="Queue.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="Scheduler.h" />
-    <ClInclude Include="Task.h" />
-    <ClInclude Include="Priority.h" />
+    <ClCompile Include="TaskPriority.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SchedulerConsoleApplication.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Definitions.h" />
+    <ClInclude Include="Queue.h" />
+    <ClInclude Include="Scheduler.h" />
+    <ClInclude Include="Task.h" />
+    <ClInclude Include="TaskPriority.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

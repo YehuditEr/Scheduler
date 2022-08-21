@@ -7,4 +7,4 @@
 #define QUANTUM_QUEUE2 30
 #define QUANTUM_QUEUE3 20
 #define QUANTUM_TASK 10
-
+#define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))

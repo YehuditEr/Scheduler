@@ -1,40 +1,32 @@
-﻿#include "Task.h"
-#include "Priority.h"
+﻿#include <time.h>
+
 #include "Scheduler.h"
 
-#include <time.h>
-
+void init() {
+	initDataStructure();
+	initPriorities();
+}
 
 int main() {
-	initPriorities(NUM_PRIORITIES);
-
-	Scheduler* scheduler = initScheduler();
-
-	putTask(scheduler, createRandomTask());
-	putTask(scheduler, createRandomTask());
-	putTask(scheduler, createRandomTask());
-	putTask(scheduler, createRandomTask());
-	putTask(scheduler, createRandomTask());
-
-
-	int time_task;
-
-	printScheduler(scheduler);
-
+	init();
+	Task* t = createRandomTask();
+	putTask(t);
+	nextTask();
 	while (1)
 	{
-		time_task = schedulerTasks(scheduler);
-		time_t start = time(NULL);
-		printf("\n\n\n");
-		while (start+time_task > time(NULL) && !isSchedulerFull(scheduler))
-		{
-			Task* t = createRandomTask();
-			putTask(scheduler, t);
+		if (isLeftTimeToTaskInCpu()) {
+			changeSizeOfTaskInCPU();
+			if(!isSchedulerFull()){
+				t = createRandomTask();
+				putTask(t);
+			}
+			else {
+				printf("");
+			}
 		}
-		printf("\n\n\n");
-		removingCPU_PuttingScheduler(scheduler);
-		printScheduler(scheduler);
-		//while (start + time_task > time(NULL));
+		else {
+			saveOrDelteTaskInCPU();
+			nextTask();
+		}
 	}
-
 }

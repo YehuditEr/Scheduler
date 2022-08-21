@@ -1,5 +1,7 @@
 #pragma once
-#include "Priority.h"
+
+#include "Definitions.h"
+#include "TaskPriority.h"
 
 struct Task {
 	int id;
@@ -9,7 +11,18 @@ struct Task {
 
 typedef struct Task Task;
 
-static int id = 0;
+/// <summary>
+/// Dynamic allocate of a task
+/// </summary>
+/// <returns>Pointer to task</returns>
+Task* dynamicAllocationTask();
+
+/// <summary>
+/// Freeing dynamically allocated memory
+/// </summary>
+/// <param name="task">- Pointer to task</param>
+void freeTask(Task* task);
+
 
 /// <summary>
 /// Create task with values
@@ -19,12 +32,11 @@ static int id = 0;
 /// <returns>Pointer to task</returns>
 Task* createTask(int priority, double size);
 
-
 /// <summary>
-/// Freeing dynamically allocated memory
+/// Create task with random values
 /// </summary>
-/// <param name="task">- Pointer to task</param>
-void freeTask(Task* task);
+/// <returns>Pointer to task</returns>
+Task* createRandomTask();
 
 
 /// <summary>
@@ -35,20 +47,28 @@ void printTask(const Task* task);
 
 
 /// <summary>
-/// Create task with random values
+/// Calculate the run time of a task
 /// </summary>
-/// <returns>Pointer to task</returns>
-Task* createRandomTask();
+/// <param name="task"></param>
+/// <returns>time</returns>
+double calculateRunTimeOfTask(const Task* task);
 
-double getTimeToRunAllTask(Task* task);
+/// <summary>
+/// Calculation of how much of a task has been completed over a period of time
+/// </summary>
+/// <param name="task">Pointer to task</param>
+/// <param name="time">Time to execute</param>
+/// <returns>part of task that execute</returns>
+double calculationPartTaskExecuteInPeriodTime(const Task* task, double time);
+
+
+int getId(const Task* task);
+
+int getPriority(const Task* task);
+
+double getSize(const Task* task);
+
+
+void decreaseSizeTask(Task* task, double decreaseSize);
 
 double getPortionOfTaskCompletedOnTime(Task* task, double time);
-
-
-int getId(Task* task);
-
-int getPriority(Task* task);
-
-double getSize(Task* task);
-
-Task* dynamicAllocationTask();

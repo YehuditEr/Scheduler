@@ -62,15 +62,15 @@ struct Queue {
 
 typedef struct Queue Queue;
 
-void   queue_free(Queue * queue);
-Queue * queue_init(void);
+void   queue_free(Queue* queue);
+Queue* queue_init(void);
 
-void* queue_dequeue(Queue * queue);
-void   queue_enqueue(Queue * queue, void* item);
+void* queue_dequeue(Queue* queue);
+void   queue_enqueue(Queue* queue, void* item);
 
-bool   isEmptyQueue(const Queue * queue);
-void   queue_iterate(const Queue * queue, void (*fn)(void*));
-size_t queue_size(const Queue * queue);
+bool   isEmptyQueue(const Queue* queue);
+void   queue_iterate(const Queue* queue, void (*fn)(void*));
+size_t queue_size(const Queue* queue);
 
 void print_queue(const Queue* queue, void (*fn)(void*));
 

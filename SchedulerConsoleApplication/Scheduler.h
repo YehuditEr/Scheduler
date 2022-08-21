@@ -1,84 +1,107 @@
 #pragma once
 
-#include "Queue.h"
-#include "Task.h"
-#include "DefinationsOfSize.h"
-
-#include <stdbool.h>
-#include <stdlib.h>
+#include <time.h>
 #include <assert.h>
 #include <stdio.h>
-#include <time.h>
+#include <stdlib.h>
+
+#include "Task.h"
+#include "Queue.h"
+#include "Definitions.h"
+
+/// <summary>
+/// Data about the task on the processor
+///		taskInCPU - A task that runs on the CPU.
+///		startTimeOfTaskInCPU - Time when the task started in the CPU.
+///		lastUpdateSize - to update size of task
+///		timeToRunInCPU - Quntum of the task to be run on the CPU
+/// </summary>
+struct TaskInCpuMetaData
+{
+	Task* taskInCPU;
+	time_t startTimeOfTaskInCPU;
+	time_t lastUpdateSize;
+	double timeToRunInCPU;
+};
+
+typedef struct TaskInCpuMetaData TaskInCpuMetaData;
+
 
 /// <summary>
 /// Saves the timing state between queues:
 ///   currentQueue - The queue number from which to schedule.
-///   timeInCurrentQueue - The time this queue is scheduled.
-///   taskInCPU - The task that is in the CPU.
+///   startTimeInCurrentQueue - Start time for this queue.
 /// </summary>
-struct Scheduling {
+struct SchedulerMetaData {
 	int currentQueue;
-	double timeInCurrentQueue;
-	Task* taskInCPU;
+	time_t startTimeInCurrentQueue;
+	TaskInCpuMetaData* taskInCPUMetaData;
 };
 
-typedef struct Scheduling Scheduling;
+typedef struct SchedulerMetaData SchedulerMetaData;
+
 
 /// <summary>
 /// Saving all task to scheduler:
 ///    queues - An array of queues, a queue for each priority
 ///    numTasks - Number of task that exist in all queues together
-///    scheduling - Managing the scheduler between queues as explained above
+///    mtaData - Managing the scheduler between queues as explained above
 /// </summary>
-struct Scheduler
+struct SchedulerDataStructure
 {
 	Queue** queues;
 	int numTasks;
-	struct Scheduling* scheduling;
+	struct SchedulerMetaData* metaData;
 };
 
-typedef struct Scheduler Scheduler;
+typedef struct SchedulerDataStructure SchedulerDataStructure;
+
+
 
 /// <summary>
-/// Dynamic initialization and allocation for the Scheduler
+/// Dynamic initialization and allocation for the DataStructure
 /// </summary>
-/// <returns>Pointer to Scheduler</returns>
-Scheduler* initScheduler();
+/// <returns>Pointer to SchedulerDataStructure</returns>
+void initDataStructure();
 
 /// <summary>
-/// Freeing dynamically allocated memory of Scheduler
+/// Freeing dynamically allocated memory of SchedulerDataStructure
 /// </summary>
-/// <param name="scheduler">- Pointer to scheduler</param>
-void freeScheduler(Scheduler* scheduler);
+void freeDataStructure();
+
+bool isSchedulerFull();
 
 /// <summary>
-/// Scheduler the task to run in CPU
+/// find next task to run in CPU
 /// </summary>
-/// <param name="scheduler">-Pointer to scheduler</param>
 /// <returns>Time the task is in the CPU</returns>
-double schedulerTasks(Scheduler* scheduler);
+void nextTask();
+
+void changeSizeOfTaskInCPU();
+void saveOrDelteTaskInCPU();
+
 
 /// <summary>
-/// Print all task in scheduer
+/// Print all task in DataStructure
 /// </summary>
-/// <param name="scheduler">-Pointer to scheduer</param>
-void printScheduler(const Scheduler* scheduler);
+void printDataStructure();
+
 
 /// <summary>
-/// Removing the task from the CPU and inserting it into the Scheduler
+/// Removing the task from the CPU and inserting it into the SchedulerDataStructure
 /// </summary>
-/// <param name="scheduler">Pointer to scheduler</param>
-void removingCPU_PuttingScheduler(Scheduler* scheduler);
+void TerminationTaskRunInCpu();
+
 
 /// <summary>
-/// Check if scheduler full
+/// Check if DataStructure full
 /// </summary>
-/// <param name="scheduler">Pointer to scheduler</param>
-bool isSchedulerFull(Scheduler* scheduer);
+bool isDataStructutreFull();
+
 
 /// <summary>
-/// Enter new task to scheduler
+/// Insert new task to DataStructure
 /// </summary>
-/// <param name="scheduler">Pointer to scheduler</param>
 /// <param name="task">Pointer to task</param>
-void putTask(Scheduler* scheduler, const Task* task);
+void putTask(const Task* task);
+bool isLeftTimeToTaskInCpu();
