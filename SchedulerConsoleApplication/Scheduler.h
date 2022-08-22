@@ -19,8 +19,8 @@
 struct TaskInCpuMetaData
 {
 	Task* taskInCPU;
-	time_t startTimeOfTaskInCPU;
-	time_t lastUpdateTime;
+	clock_t startTimeOfTaskInCPU;
+	clock_t lastUpdateTime;
 	double timeToRunInCPU;
 };
 
@@ -34,7 +34,7 @@ typedef struct TaskInCpuMetaData TaskInCpuMetaData;
 /// </summary>
 struct SchedulerMetaData {
 	int currentQueue;
-	time_t startTimeInCurrentQueue;
+	clock_t startTimeInCurrentQueue;
 	TaskInCpuMetaData* taskInCPUMetaData;
 };
 
@@ -55,7 +55,6 @@ struct SchedulerDataStructure
 };
 
 typedef struct SchedulerDataStructure SchedulerDataStructure;
-
 
 
 /// <summary>
