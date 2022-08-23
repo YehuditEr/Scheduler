@@ -4,7 +4,7 @@
 #pragma region Defination
 
 void initMetaData();
-void initTaskMetaData();
+void initTaskRunMetaData();
 
 void freeMetaData();
 void freeTaskMetaData();
@@ -72,13 +72,13 @@ void initMetaData() {
 	DataStructure->metaData = calloc(1, sizeof(SchedulerMetaData));
 	assert(DataStructure->metaData);
 	DataStructure->metaData->currentQueue = 0;
-	initTaskMetaData();
+	initTaskRunMetaData();
 	assert(DataStructure->metaData->taskInCPUMetaData);
 	DataStructure->metaData->startTimeInCurrentQueue = NULL;
 }
 
 /* Dynamic initialization and allocation for TaskMetaData */
-void initTaskMetaData() {
+void initTaskRunMetaData() {
 	assert(DataStructure);
 	assert(DataStructure->metaData);
 	DataStructure->metaData->taskInCPUMetaData = calloc(1, sizeof(TaskInCpuMetaData*));
@@ -282,6 +282,10 @@ double quantityRemainingForCurrentQueue() {
 #pragma region Task In CPU
 /* check if the task have time left to run on the cpu */
 bool isLeftTimeToRunTaskInCpu() {
+	if (getTaskInCPU() == NULL) {
+		printf("task in cpu == NULL");
+		return;
+	}
 	clock_t start = getStartTimeOfTaskInCPU();
 	double timeToRun = getTimeToRunInCPU();
 	clock_t cl = clock();
@@ -369,7 +373,7 @@ void nextTask() {
 
 			/* Removing a task from the queue and updating the TaskInCpuMetaData*/
 			Task* task = queue_dequeue(getQueueByPriority(currentQueue + 1));
-			decreaseNumTask();
+			//decreaseNumTask();
 			double timeToRunTask = calculateRunTimeOfTask(task);
 			double timeToRunInCpu = MIN(remaimigTimeToQueue, timeToRunTask);
 			timeToRunInCpu = MIN(QUANTUM_TASK, timeToRunInCpu);
@@ -377,8 +381,10 @@ void nextTask() {
 			printf("schedule task to cpu:");
 			printTask(task);
 		}
-		else
+		else{
 			printf("\nnextTask: All queues is empty, num tasks in data structure is %d", getNumTasks());
+			setTaskInCPU(NULL);
+		}
 	}
 	else
 	{
@@ -411,6 +417,10 @@ void pushTask(const Task* task) {
 }
 
 void changeSizeOfTaskInCPU() {
+	if (getTaskInCPU() == NULL) {
+		printf("task in cpu == null");
+		return;
+	}
 	printf("\nchangeSizeOfTaskInCPU:taskId: %d, sizeTask=%f, ",getId(getTaskInCPU()), getSize(getTaskInCPU()));
 	clock_t start = getLastUpdateSize();
 	double timeTaskRun = ((double)clock() - (double)start)/ CLOCKS_PER_SEC;
@@ -423,12 +433,19 @@ void changeSizeOfTaskInCPU() {
 }
 
 void saveOrDelteTaskInCPU() {
+	if (getTaskInCPU() == NULL) {
+		printf("\ntask in cpu == NULL");
+		return;
+	}
+	
 	double sizeTask = getSize(getTaskInCPU());
 	printf("\nsaveOrDelteTaskInCPU: taskId = %d, sizeTask = %f ", getId(getTaskInCPU()), sizeTask);
+	decreaseNumTask();
 	if (sizeTask > 0) {
 		pushTask(getTaskInCPU());
 		printf("- push task to queues!");
 	}
-	else
+	else {
 		printf("- delete task!");
+	}
 }

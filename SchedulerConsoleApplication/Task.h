@@ -68,6 +68,8 @@ int getPriority(const Task* task);
 
 double getSize(const Task* task);
 
+Task* copyTask(Task* task);
+
 
 void decreaseSizeTask(Task* task, double decreaseSize);
 

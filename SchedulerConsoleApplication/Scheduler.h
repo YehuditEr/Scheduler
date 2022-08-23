@@ -56,6 +56,10 @@ struct SchedulerDataStructure
 
 typedef struct SchedulerDataStructure SchedulerDataStructure;
 
+//мозеч!!!!!!
+Task* getTaskInCPU();
+int getNumTasks();
+
 
 /// <summary>
 /// Dynamic initialization and allocation for the DataStructure

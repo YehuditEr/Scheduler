@@ -73,6 +73,17 @@ void printTask(const Task* task) {
 }
 
 
+Task* copyTask(Task* task) {
+	assert(task);
+	Task* copy = dynamicAllocationTask();
+	assert(copy);
+	copy->id = task->id;
+	copy->priority = task->priority;
+	copy->size = task->size;
+	return copy;
+}
+
+
 /* Calculate the run time of a task */
 double calculateRunTimeOfTask(const Task* task) {
 	assert(task);
